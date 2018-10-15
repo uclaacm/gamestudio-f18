@@ -64,15 +64,14 @@ Technically, we could end this section and leave the arena as it is. But that me
 We can also reset the position of the arena by going into its inspector, clicking on the gear to the right, and clicking on "Reset".
 
 ### Components and GameObjects
-So we've been calling the things we make in the game gameobjects, but haven't really discussed what they are yet. But that's what they are - the things we make in the game. This includes the actual "objects" like our arena, but also things like lights, cameras, and special effects. 
+So we've been calling the things we make in the game gameobjects, but haven't really discussed what they are yet. But that's what they are - the things we make in the game. This includes the actual "objects" like our arena, but also things like lights, cameras, and special effects. Essentially any object in our game is a gameObject.
 
-Components are, well, components, of gameobjects. These are the different things we see in the gameobject's inspector, including the transform(position, rotation, and scale). We can also add more interesting components like rigidbodies, colliders, and audio. 
+Components are, well, components, of gameobjects. These are the different things we see in the gameobject's inspector, including the transform(position, rotation, and scale). We can also add more interesting components like rigidbodies, colliders, audio, and scripts. Components add functionality to their attached gameobject, we will see some examples of this soon.
 
 # Creating the Player and PlayerController Script
-Note before we go on: Coding is definitely not needed to use Unity but it makes some things a bit easier to do when you’re starting out. We don't expect anyone here to know how to code at all, so if you're worried at that well make things really easy and we’ll go slowly. If you're not that interested in coding just bear with us and we'll get to the fun stuff after.
 
 ### Materials
-We can add color to our scene with materials. Create one by clicking Create (the one under the Project Window, not under the hierarchy), then "Material". This will create a new material for us. In the inspector, click on the white box with next to a dropper icon. This will open up a color window where you can choose whatever color you want for your material. Click on the Material in the Project window to rename it "Arena". To use your material, simply drag it into the scene and onto whatever gameobject you want to recolor. Notice how if you edit your material color after an object has it, the object's color will change too. 
+We can add color to our scene with materials. Create one by clicking Create (the one under the Project Window, not under the hierarchy), then "Material". This will create a new material for us. In the inspector, click on the grey box to the right of the word "Albedo". This will open up a color window where you can choose whatever color you want for your material. Click on the Material in the Project window to rename it "Arena". To use your material, simply drag it into the scene and onto whatever gameobject you want to recolor. Notice how if you edit your material color after an object has it, the object's color will change too. 
 
 ### The Player
 To play the game, we want to be able to see our player through the main camera. Click on Main Camera in the hierarchy, and in the inspector give it the values position = (0, 6, -6), rotation = (50, 0, 0) so we can better see the arena in our game view. Or adjust it however you want, it's a free country. 
@@ -80,7 +79,7 @@ To play the game, we want to be able to see our player through the main camera. 
 Create a sphere (Create-> 3D Object -> Sphere), and rename it "Player". Set its position to (0, 0.5, 0). Go into the Inspector for Player, and press "Add Component" at the bottom of the window. Type in "rigidbody", and select it when it pops up. 
 
 ### Rigidbodies
-By adding a rigidbody to an object, we let it experience physics. This means the object can be pulled down by gravity, and react to collisions(if there's also a Collider). Without the Rigidbody, gameobjects won't be able to move.
+A rigidbody is a component like we mentioned earlier. By adding a rigidbody to an object, we let it experience physics. This means the object can be pulled down by gravity, and react to collisions(if there's also a Collider). Without the Rigidbody, gameobjects won't be able to move.
 
 ### Tags
 We can add tags to gameobjects in Unity. These are used to help identify GameObjects for scripting purposes. Click on Player, and in the Inspector, you can find this box: 
@@ -89,19 +88,27 @@ We can add tags to gameobjects in Unity. These are used to help identify GameObj
 
 When you click the "Untagged" box, a dropdown menu will appear with your tag options. Select Player, and now your player will be tagged!
 
+### Disclaimer
+Note before we go on: Coding is definitely not needed to use Unity but it makes some things a bit easier to do when you’re starting out. We don't expect anyone here to know how to code at all, so if you're worried at that well make things really easy and we’ll go slowly. If you're not that interested in coding just bear with us and we'll get to the fun stuff after.
+
 ### Unity Programming Terms
 So we are going to code a bit for our PlayerController Script, so here are some terms used in programming for Unity: 
 
-* variable: like a variable in math, but can hold values other than just numbers. In C#, the language Unity uses, the variable's type and name have to be declared.
+* variable: like a variable in math, but can hold values other than just numbers. In C#, the language Unity uses, the variable's type and name have to be declared as follows:
+	* Type name = value;
+	* Type is the kind of value that we want to hold. In C# we have quite a few different options, a few ones that are relavant to us in Unity are
+		* GameObject : holds a gameobject
+		* Rigidbody : holds a rigidbody
+		* int : holds an integer value (whole number 1, 2, 3, 4 etc)
+		* float : holds a number that can have a fractional value(i.e. 2.34, 7.92, 6.44)
+		* Vector3 : holds a 3d vector (essentially just a collection of 3 floats that can be used to hold things like 3d position)
 
-* private and public variables: Public variables are visible to all classes. Other classes or objects can access them. Private variables can only be used by the class they're in. Public variables can also be edited in the Unity Editor under the Inspector. 
-
-* float: a value that can have a fractional value(i.e. 2.34, 7.92, 6.44)
+* private and public variables: Public variables are visible to other objects outside the script in which they are created. Private variables can only be used by the script they're in. Public variables can also be edited in the Unity Editor under the Inspector for that script. 
 
 * function: Basically a block of code with a name. This allows us to write blocks of code that do different things separately, which makes it easier to write and debug. You can call functions (aka run them) in other functions. 
 
 ### PlayerController Script 
-Under the Project Window, click Create -> C# Script. Rename the script "PlayerController". In the hierarchy, select the Player, then in the Inspector click on Add Component then search and add the script. Double click the script under the project window to launch the code editor. This will be Visual Studio if you have a windows, or MonoDevelop if you have a mac. The code should look like this: 
+Under the Project Window, click Create -> C# Script. Rename the script "PlayerController". In the hierarchy, select the Player, then in the Inspector click on Add Component then search and add the script. Double click the script under the project window to launch the code editor. This will be Visual Studio if you have a windows, or MonoDevelop if you have a mac (newer versions of Unity also use Visual Studio). The code should look like this: 
 ```cs
 using System.Collections;
 using System.Collections.Generic;
@@ -120,21 +127,27 @@ public class NewBehaviourScript : MonoBehaviour {
 	}
 }
 ```
-The important parts of this script that we're going to focus on is the Start and Update methods. Any code inside the brackets after "void Start" will be called once and immediately after the scene is played. Any code inside the brackets after "void Update" will be called every frame while the game is playing.
+The important parts of this script that we're going to focus on is the Start and Update methods. Any code inside the brackets after "void Start" will be called once and immediately after you press the play button in Unity. Any code inside the brackets after "void Update" will be called every frame while the game is playing.
 
-Add this code after "usingUnityEngine;" and before "public class": 
+### Main Idea
+
+The main idea for this script is to make the player move. We want to do this by taking the player's WASD input and then adding a movement force on the player in the direction of the player's input
+
+### How to do this
+
+Add this code after "using UnityEngine;" and before "public class": 
 ```cs
 [RequireComponent(typeof(Rigidbody))]
 ``` 
-This will require the player to have a Rigidbody, so that we can use physics to move it around. 
+This will require the player to have a Rigidbody attached, so that we can use physics to move it around. 
 
 Add this code to the inside of MonoBehavior and before Start:
 ```cs
 [Range(50, 200)]
 public float speed = 100; 
-private Rigidbody rb = GetComponent<Rigidbody>(); 
+private Rigidbody rb; 
 ```
-The second line creates a float variable that we'll use to determine the speed of the player. The first line makes sure it's always between 50 and 200. The third line creates a variable named rb that is of the type rigidbody.
+The second line creates a float variable that we'll use to set the movement speed of the player. The first line makes sure it's always between 50 and 200. The third line creates a variable named rb that is of the type rigidbody.
 
 Add this code to the inside of void Start: 
 ```cs
@@ -142,7 +155,7 @@ rb = GetComponent<Rigidbody>();
 	
 ```
 
-This code assigns the Rigidbody attached to our player to the variable rb so we can more easily access it. 
+This code assigns the Rigidbody attached to our player to the variable rb so we can more easily access it. "GetComponent" is a function that searches through the components on the current gameobject and returns that component if it finds one of the type in "<>".
 
 Add this code to the inside of void Update: 
 ```cs
@@ -153,7 +166,7 @@ rb.AddForce(new Vector3(x, 0, z) * Time.deltaTime * speed);
 ```
 Input.GetAxis() is a built-in method by Unity that detects whether or not the player is pressing WASD or the arrow keys. It will return a value between -1 and 1, 1 being up or right, -1 being down or left. We're creating the variables horizontal and vertical to hold these values. 
 
-In the third line, we are creating a Vector3 variable with the x and z values being horizontal and vertical respectively. Y is zero because we don't want the player to move the ball up and down. 
+We want the player to move in the direction of the user's input, so the idea here is that we somehow want to apply some force on the player based on which keys the user presses. We do this  in the third line, by creating a Vector3 variable with the x and z values being horizontal and vertical respectively. Y is zero because we don't want the player to move the ball up and down. 
 
 The last line uses the rigidbody (remember we stored that in the variable rb) to add a force to the ball using a vector made with the x and z inputs. By multiplying this by Time.deltaTime, we make our game frame rate independent. (i.e. we make the player move x units per second rather than x units per frame). We then multiply it by our speed variable. 
 
@@ -173,14 +186,14 @@ Add this code to the inside of void Start:
 offset = this.transform.position - player.position;
 ```
 
-This sets the offset vector to be the distance and angle the camera is away from the player at the start of the scene. 
+This sets the offset vector to be the distance and angle the camera is away from the player at the start of the scene. We will then use this to keep the camera this fixed offset from the player at all times.
 
 Add this code to the inside of void Update: 
 ```cs
 this.transform.position = player.position + offset;
 ```
 
-This sets the camera's position to be the same as the player's, but weith the offset. Since it's in the Update method, it makes sure that the camera is always the same distance away from the player. 
+This sets the camera's position to be the same as the player's, but with the offset. Since it's in the Update method, it makes sure that the camera is always the same distance away from the player. 
 
 In the editor, be sure to set the player Transform to the player's transform. Do this by clicking on the player in the hierarchy, and dragging and dropping it to the space under the CameraController in the Inspector. It should look like this: 
 
@@ -201,7 +214,7 @@ Now the player goes through the collider. This is because now instead of being a
 ## Pickup Script
 Create a new script and call it PickupController. 
 
-This time, we can get rid of the Update and Start methods. Our collider comes with its own method that we can use to detect when something hits it. In the brackets after MonoBehavior, add this code:
+This time, we can get rid of the Update and Start methods. Our trigger collider comes with its own method that we can use to detect when something hits it. In the brackets after MonoBehavior, add this code:
 
 ```cs
 private void OnTriggerEnter(Collider other) {
@@ -219,7 +232,7 @@ Now that we have what our pickup should look like and behave, we want to have mu
 
 We can make our powerup a prefab by clicking on it in our main scene, then dragging and dropping it to the project window. It should pop up now in the project window. Now that we have it as a prefab, we can drag and drop a bunch of them into our scene. 
 
-Like with the Arena, we don't want a bunch of cubes cluttering our hierarchy, so we can create an empty (Create ->Create Empty), and name it Pickups. 
+Like with the Arena, we don't want a bunch of cubes cluttering our hierarchy, so we can create an empty (Create ->Create Empty), and name it Pickups, then child all of the pickups to this Pickups empty object.
 
 ## Cleaning up the Project Window
 Like how we cleaned up the Hierarchy by placing similar gameObjects under one gameObject, we can create folders in the project window to organize things. This is a good practice, especially as you build larger and larger games. Under the project window, click Create -> Folder to create a nwe folder. Create 4 of these, and rename them "Materials", "Prefabs", "Scenes", and "Scripts". Drag the assets in the project window to their appropriate folders. 
